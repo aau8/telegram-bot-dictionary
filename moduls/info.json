@@ -1,0 +1,116 @@
+{
+  "head": {},
+  "def": [
+    {
+      "text": "cold",
+      "pos": "noun",
+      "ts": "kəʊld",
+      "tr": [
+        {
+          "text": "простуда",
+          "pos": "noun",
+          "gen": "ж",
+          "fr": 10,
+          "syn": [
+            { "text": "насморк", "pos": "noun", "gen": "м", "fr": 5 },
+            { "text": "простудные заболевания", "pos": "noun", "fr": 1 }
+          ],
+          "mean": [{ "text": "common cold" }, { "text": "runny nose" }],
+          "ex": [
+            { "text": "slight cold", "tr": [{ "text": "легкая простуда" }] },
+            {
+              "text": "allergic cold",
+              "tr": [{ "text": "аллергический насморк" }]
+            }
+          ]
+        },
+        {
+          "text": "холод",
+          "pos": "noun",
+          "gen": "м",
+          "fr": 10,
+          "syn": [
+            { "text": "стужа", "pos": "noun", "gen": "ж", "fr": 1 },
+            { "text": "мороз", "pos": "noun", "gen": "м", "fr": 5 }
+          ],
+          "mean": [{ "text": "chill" }, { "text": "frost" }],
+          "ex": [
+            { "text": "cold pole", "tr": [{ "text": "полюс холода" }] },
+            { "text": "bitter cold", "tr": [{ "text": "сильный мороз" }] }
+          ]
+        },
+        {
+          "text": "холодная погода",
+          "pos": "noun",
+          "fr": 1,
+          "mean": [{ "text": "cold weather" }]
+        },
+        { "text": "холодная", "pos": "noun", "gen": "ж", "fr": 1 }
+      ]
+    },
+    {
+      "text": "cold",
+      "pos": "adjective",
+      "ts": "kəʊld",
+      "tr": [
+        {
+          "text": "равнодушный",
+          "pos": "adjective",
+          "fr": 1,
+          "mean": [{ "text": "indifferent" }]
+        },
+        {
+          "text": "холодильный",
+          "pos": "adjective",
+          "fr": 5,
+          "syn": [{ "text": "холодовый", "pos": "adjective", "fr": 5 }],
+          "mean": [{ "text": "refrigeration" }],
+          "ex": [
+            { "text": "cold room", "tr": [{ "text": "холодильная камера" }] },
+            { "text": "cold allergy", "tr": [{ "text": "холодовая аллергия" }] }
+          ]
+        },
+        {
+          "text": "прохладный",
+          "pos": "adjective",
+          "fr": 5,
+          "mean": [{ "text": "cool" }],
+          "ex": [{ "text": "cold day", "tr": [{ "text": "прохладный день" }] }]
+        },
+        {
+          "text": "студеный",
+          "pos": "adjective",
+          "fr": 1,
+          "mean": [{ "text": "freezing" }]
+        }
+      ]
+    },
+    {
+      "text": "cold",
+      "pos": "adverb",
+      "ts": "kəʊld",
+      "tr": [
+        {
+          "text": "холодно",
+          "pos": "adverb",
+          "fr": 10,
+          "mean": [{ "text": "chilly" }]
+        },
+        { "text": "в холодном состоянии", "pos": "adverb", "fr": 1 }
+      ]
+    },
+    {
+      "text": "cold",
+      "pos": "participle",
+      "ts": "kəʊld",
+      "tr": [
+        {
+          "text": "охлажденный",
+          "pos": "participle",
+          "fr": 1,
+          "mean": [{ "text": "chilled" }]
+        }
+      ]
+    }
+  ]
+}

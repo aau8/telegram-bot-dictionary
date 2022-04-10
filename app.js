@@ -1,8 +1,10 @@
-import { botToken } from './config.js'
+import { apiKeys } from './config.js'
 import TelegramBot from 'node-telegram-bot-api'
 import sqlite3 from 'sqlite3'
+import { getInfoWord } from './moduls/word-info.js'
+import { getPhoto } from './moduls/word-img.js'
 
-const bot = new TelegramBot(botToken, {polling: true})
+const bot = new TelegramBot(apiKeys.bot, {polling: true})
 
 main()
 function main() {
@@ -17,26 +19,38 @@ function main() {
 
         if (word === '') {
             bot.sendMessage(chatId, 'Слово не может быть пустым')
+            return
         }
         else if (transl === '') {
             bot.sendMessage(chatId, 'Перевод не может быть пустым')
+            return
         }
         else {
-            bot.sendMessage(chatId, `Слово: ${word}\nПеревод: ${transl}`)
-        }
+            const db = new sqlite3.Database('./dictionary.db')
+    
+            db.serialize(e => { 
+    
+                db.run(
+                    'INSERT INTO words(word, translate, date) VALUES (?,?,?)', 
+                    [word, transl, date], 
+                    (err) => {
+                        if (err) { throw err }
 
-        const db = new sqlite3.Database('./dictionary.db')
-
-        db.serialize(e => { 
-
-            db.run('INSERT INTO words(word, translate, date) VALUES (?,?,?)', [word, transl, date], err => {
-                if (err) {
-                    throw err 
-                }
+                        bot.sendMessage(chatId, 'Слово записано!')
+                    }
+                )
             })
-        })
+    
+            db.close()
+        }
+        
+        // getPhoto(word)
+        //     .then(data => {
+        //         bot.sendPhoto( chatId, data.url.medium, { caption: `Слово: ${word}\nПеревод: ${transl}` } )
+        //     })
 
-        db.close()
+        // getInfoWord(word)
+        //     .then(data => console.log(data))
     })
 
     bot.on('message', msg => {
