@@ -1,10 +1,44 @@
 import { botToken } from './config.js'
 import TelegramBot from 'node-telegram-bot-api'
+import sqlite3 from 'sqlite3'
 
 const bot = new TelegramBot(botToken, {polling: true})
 
 main()
 function main() {
+    bot.onText(/[a-zA-Z\s]+:|-[а-яА-Я\s]+/, async (msg, match) => {
+        const chatId = msg.chat.id
+        const text = msg.text
+
+        const split = text.split(/:|-/)
+        const word = split[0].trim()
+        const transl = split[1].trim()
+        const date = new Date().getTime()
+
+        if (word === '') {
+            bot.sendMessage(chatId, 'Слово не может быть пустым')
+        }
+        else if (transl === '') {
+            bot.sendMessage(chatId, 'Перевод не может быть пустым')
+        }
+        else {
+            bot.sendMessage(chatId, `Слово: ${word}\nПеревод: ${transl}`)
+        }
+
+        const db = new sqlite3.Database('./dictionary.db')
+
+        db.serialize(e => { 
+
+            db.run('INSERT INTO words(word, translate, date) VALUES (?,?,?)', [word, transl, date], err => {
+                if (err) {
+                    throw err 
+                }
+            })
+        })
+
+        db.close()
+    })
+
     bot.on('message', msg => {
         const chatId = msg.chat.id
         const text = msg.text
@@ -12,68 +46,53 @@ function main() {
         if (text === '/info') {
             bot.sendMessage(chatId, 'Раздел с информацией о боте')
         }
-        else if (text.includes(':')) {
-            const split = text.split(':')
-            const word = split[0].trim()
-            const transl = split[1].trim()
+        else if (text === '/list') {
 
-            if (word === '') {
-                bot.sendMessage(chatId, 'Слово не может быть пустым')
-            }
-            else if (transl === '') {
-                bot.sendMessage(chatId, 'Перевод не может быть пустым')
-            }
-            else {
-                bot.sendMessage(chatId, `Слово: ${word};\nПеревод: ${transl}`)
-            }
+            const db = new sqlite3.Database('./dictionary.db')
 
-            console.log(split)
+            db.all('SELECT word, translate FROM words', (err, arr) => {
+                const string = arr.map(elem => `${elem.word} - ${elem.translate}`).join('\n')
+                
+                bot.sendMessage(chatId, string)
+            })
+
+            db.close()
         }
-        // else {
-        //     const word = text
-        //     bot.sendMessage(chatId, `Теперь отправьте перевода слова ${word}`)
-        // }
     })
+    const word = { 
+        origin: '', 
+        translate: '',
+    }
+
+    // bot.onText(/[а-я]+/, async (msg, match) => {
+
+        
+    //     const resp = match[1];  // полученный от пользователя id
+    //     word.origin = msg.text
+
+    //     // bot.sendPoll(msg.chat.id, 'Is Telegram great?', ['Sure', 'Of course'])
+    //     /*
+    //      Тут он ищет id по базе
+    //   */
+    //     // Отправляем ответ пользователю
+    //     // console.log(msg)
+    //     // async () => {}
+
+    //     // bot.sendMessage(msg.chat.id, 'Какой перевод?'); // Таким же образом можно пересылать текст в чат с другим пользователем
+    
+    //     // bot.onText(/[a-z]+/, (msg, match) => {
+    //     //     word.translate = msg.text
+
+    //     //     bot.sendMessage(msg.chat.id, `Перевод записан: ${word.origin} -> ${word.translate}`); // Таким же образом можно пересылать текст в чат с другим пользователем
+         
+    //     //     console.log(word)
+    //     // })
+    //     // Promise.then(fun => {
+    //     // })
+
+    //     // await new Promise((res, rej) => {
+    //     //     setTimeout(console.log('Hello, world'), 3000)
+            
+    //     // })
+    // });
 }
-
-// var sqlite3 = require('sqlite3').verbose();
-// import sqlite3 from 'sqlite3'
-// const db = new sqlite3.Database('db.sqlite3');
-
-// db.serialize(function() {
-// //   db.run("CREATE TABLE lorem (info TEXT)");
-
-//   const stmt = db.prepare("INSERT INTO lorem VALUES (?)");
-//   for (let i = 0; i < 10; i++) {
-//       stmt.run("Ipsum " + i);
-//   }
-//   stmt.finalize();
-
-//   db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
-//       console.log(row.id + ": " + row.info);
-//   });
-// });
-
-// db.close();
-
-// import options from './options.js'
-// // Matches "/echo [whatever]"
-// bot.onText(/\/echo (.+)/, (msg, match) => {
-//     // 'msg' is the received Message from Telegram
-//     // 'match' is the result of executing the regexp above on the text content
-//     // of the message
-  
-//     const chatId = msg.chat.id;
-//     const resp = match[1]; // the captured "whatever"
-  
-//     // send back the matched "whatever" to the chat
-//     bot.sendMessage(chatId, resp, options.currency)
-// });
-
-// bot.on('callback_query', async msg => {
-//     const chatId = msg.message.chat.id
-//     const data = msg.data
-
-//     console.log(data)
-//     bot.sendMessage(chatId, `Вы выбрали - ${data}`)
-// })
